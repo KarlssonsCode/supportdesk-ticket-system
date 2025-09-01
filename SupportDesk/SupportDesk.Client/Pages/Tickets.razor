@@ -1,0 +1,36 @@
+﻿@page "/tickets"
+@using SupportDesk.Shared.Models
+@inject HttpClient Http
+
+<h3>Tickets</h3>
+<table>
+<thead>
+    <tr>
+        <th>Title</th>
+        <th>Created at:</th>
+        <th>Description</th>
+    </tr>
+</thead>
+<tbody>
+
+@foreach (var ticket in tickets)
+{
+    <tr>
+        <td>@ticket.Title</td>
+        <td>@ticket.CreatedAt.ToShortDateString()</td>
+        <td>@ticket.Description</td>
+        
+    </tr>
+}
+</tbody>
+</table>
+
+@code {
+    private List<Ticket> tickets = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        tickets = await Http.GetFromJsonAsync<List<Ticket>>("api/tickets");
+        Console.WriteLine($"Loaded {tickets?.Count} tickets");
+    }
+}
